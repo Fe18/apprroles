@@ -1,7 +1,7 @@
 # Structural Graph Representations based on Multiscale Local Network Topologies
 
 ### Information
-This code provides an easy-to-follow implementation for calculating node descriptors, resp. graph representations, as described in the paper "Structural Graph Representations based on Multiscale Local Network Topologies" that has been published at the 2019 Web Intelligence Conference. However, we simplified the code such that everything can be computed within a single python environment. The original results reported in the paper have been achieved by using the APPR procedure from the Ligra framework by Julian Shun. Note that this framework is based on C and hence is expected to achieve better performance in terms of computation time. Also, we omitted the parameter search which has originally been done with a stratified kfold cross validation.
+This code provides an easy-to-follow implementation for calculating node descriptors, resp. graph representations, as described in the paper "Structural Graph Representations based on Multiscale Local Network Topologies" that has been published at the 2019 Web Intelligence Conference. However, we simplified the code such that everything can be computed within a single python environment. The original results reported in the paper have been achieved by using the APPR procedure from the [Ligra](https://github.com/jshun/ligra) framework by Julian Shun. Note that this framework is based on C and hence is expected to achieve better performance in terms of computation time. Also, we omitted the parameter search which has originally been done with a stratified kfold cross validation.
 
 ### Requirements
 The following packages are required (the given versions should work):  
