@@ -25,6 +25,7 @@ def _node_descriptors(ppr_matrix, mapping):
 
 def role_descriptors(dataset, alphas, epsilon, delimiter):
     # load graph
+    _LOGGER.info('Loading data...')
     g = nx.read_adjlist(
         os.path.join('datasets', dataset.upper(), dataset.upper() + '_A.txt'),
         delimiter=delimiter,
@@ -36,6 +37,7 @@ def role_descriptors(dataset, alphas, epsilon, delimiter):
     )
 
     # compute role descriptors
+    _LOGGER.info('Computing role descriptors...')
     descriptors = {node_id: [] for node_id in g.nodes()}
     for alpha in alphas:
         ppr_matrix, mapping = appr(g, alpha=float(alpha), epsilon=float(epsilon))
@@ -44,6 +46,7 @@ def role_descriptors(dataset, alphas, epsilon, delimiter):
             descriptors[n_id].append(desc)
 
     # evaluate
+    _LOGGER.info('Creating plot...')
     sorted_keys = sorted(list(descriptors.keys()))
     embeddings = np.array([descriptors[k] for k in sorted_keys])
 
@@ -61,6 +64,7 @@ def role_descriptors(dataset, alphas, epsilon, delimiter):
 
 def graph_classification(dataset, alphas, epsilon, k, test_fraction, delimiter):
     # load data
+    _LOGGER.info('Loading data...')
     g = nx.read_adjlist(os.path.join('datasets', dataset.upper(), dataset.upper() + '_A.txt'),
                         delimiter=delimiter,
                         nodetype=int)
@@ -72,6 +76,7 @@ def graph_classification(dataset, alphas, epsilon, k, test_fraction, delimiter):
     g_id_subtract = 0 if np.min(g_indicators) == 0 else 1
 
     # calculate node descriptors per graph
+    _LOGGER.info('Computing node descriptors for each network...')
     components = nx.connected_component_subgraphs(g)
     graphs_descriptors = dict()
 
@@ -94,6 +99,7 @@ def graph_classification(dataset, alphas, epsilon, k, test_fraction, delimiter):
             all_role_descriptors.append(d)
 
     # train kmeans model
+    _LOGGER.info('Computing graph representations...')
     k_means = KMeans(n_clusters=k, init='k-means++', n_init=10).fit(all_role_descriptors)
 
     # compute representations for each graph
@@ -104,6 +110,7 @@ def graph_classification(dataset, alphas, epsilon, k, test_fraction, delimiter):
         graph_representations[g_id - g_id_subtract, labels_in_graph] = counts
 
     # eval
+    _LOGGER.info('Doing classification...')
     ind_train, ind_test, _, _ = train_test_split(list(range(g_labels.shape[0])),
                                                  g_labels,
                                                  test_size=test_fraction,
@@ -116,7 +123,7 @@ def graph_classification(dataset, alphas, epsilon, k, test_fraction, delimiter):
     y_test = g_labels[ind_test]
     y_pred = model.predict(graph_representations[ind_test])
 
-    print('Accuracy: {}'.format(accuracy_score(y_true=y_test, y_pred=y_pred)))
+    _LOGGER.info('Accuracy: {}'.format(accuracy_score(y_true=y_test, y_pred=y_pred)))
 
 
 if __name__ == '__main__':
